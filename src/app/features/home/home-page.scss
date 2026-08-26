@@ -1,0 +1,47 @@
+@use '../../../styles/mixins';
+
+.home-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.grad-select {
+  max-width: 240px;
+}
+
+.results-header {
+  margin-bottom: var(--space-2);
+}
+
+.results-count {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.oglas-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+@include mixins.desktop {
+  .home-header {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+
+    .seg,
+    .chip-row {
+      flex: 1 0 auto;
+    }
+  }
+
+  .oglas-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-4);
+  }
+}

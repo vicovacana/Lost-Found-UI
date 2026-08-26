@@ -1,0 +1,96 @@
+@if (loading()) {
+  <div class="page">
+    <p class="text-muted">Učitavanje…</p>
+  </div>
+} @else if (oglas(); as o) {
+  <div class="detail-photo">
+    @if (o.fotografija) {
+      <img [src]="o.fotografija" [alt]="o.naziv" />
+    } @else {
+      <span class="photo-placeholder"></span>
+    }
+    <a class="btn btn-icon back-btn" routerLink="/">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+        <path d="M15 5 8 12l7 7" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </a>
+    @if (isOwner) {
+      <a class="btn btn-secondary edit-btn" [routerLink]="['/oglasi', o.oglasId, 'izmena']">Izmeni</a>
+    }
+  </div>
+
+  <div class="page detail-body">
+    <div class="meta-row">
+      <span class="tag" [class.tag-found]="o.tip === TipOglasa.Nadjeno" [class.tag-lost]="o.tip === TipOglasa.Izgubljeno">
+        {{ o.tip === TipOglasa.Nadjeno ? 'Nađeno' : 'Izgubljeno' }}
+      </span>
+      <span class="text-muted" style="font-size: 12px">{{ o.datumKreiranja | date: 'd. MMM yyyy · HH:mm' }}</span>
+    </div>
+
+    <h1>{{ o.naziv }}</h1>
+
+    <div class="submeta-row">
+      <div>
+        <span class="label">Kategorija</span>
+        <span>{{ KATEGORIJA_LABELS[o.kategorija] }}</span>
+      </div>
+      <div>
+        <span class="label">Grad</span>
+        <span>{{ o.grad }}</span>
+      </div>
+    </div>
+
+    <p>{{ o.opis }}</p>
+
+    @if (o.latitude !== null && o.longitude !== null) {
+      <div class="field">
+        <label>Lokacija</label>
+        <div class="map-slot">
+          <app-map-view mode="view" [lat]="o.latitude" [lng]="o.longitude" />
+        </div>
+      </div>
+    }
+
+    <div class="creator-row hr-top">
+      <span class="avatar">{{ o.kreatorKorisnickoIme.slice(0, 2).toUpperCase() }}</span>
+      <span class="creator-name">{{ o.kreatorKorisnickoIme }}</span>
+    </div>
+  </div>
+
+  <div class="page action-bar">
+    @if (!auth.isAuthenticated()) {
+      <a class="btn btn-primary btn-block" routerLink="/auth">Prijavi se da bi tvrdio da je tvoje</a>
+    } @else if (auth.isAdmin()) {
+    } @else if (isOwner) {
+      <a class="btn btn-secondary btn-block" routerLink="/razgovori">Vidi moje razgovore</a>
+    } @else if (myClaim(); as claim) {
+      <div class="claim-status">
+        <span>Tvoj zahtev:</span>
+        <app-status-tag [potrazivanje]="claim.status" />
+      </div>
+      @if (razgovor(); as r) {
+        <a class="btn btn-secondary btn-block" [routerLink]="['/razgovori', r.razgovorId]">Otvori chat</a>
+      }
+    } @else {
+      <button type="button" class="btn btn-primary btn-block" [disabled]="claiming()" (click)="claim()">
+        Ovo je moje
+      </button>
+    }
+
+    @if (auth.isAdmin()) {
+      @if (razgovor(); as r) {
+        <a class="btn btn-secondary btn-block" [routerLink]="['/razgovori', r.razgovorId]">Otvori chat</a>
+      } @else if (potrazivanja().length > 0) {
+        <button type="button" class="btn btn-secondary btn-block" [disabled]="openingRazgovor()" (click)="startRazgovor()">
+          Pokreni istragu
+        </button>
+      } @else {
+        <p class="text-muted">Nema potraživanja za ovaj oglas.</p>
+      }
+    }
+  </div>
+} @else {
+  <div class="page">
+    <p class="text-muted">Oglas nije pronađen.</p>
+  </div>
+}

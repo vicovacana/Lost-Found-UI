@@ -1,0 +1,20 @@
+<a class="oglas-card card" [routerLink]="['/oglasi', oglas.oglasId]">
+  <div class="thumb">
+    @if (oglas.fotografija) {
+      <img [src]="oglas.fotografija" [alt]="oglas.naziv" />
+    } @else {
+      <span class="thumb-placeholder"></span>
+    }
+  </div>
+
+  <div class="body">
+    <div class="meta-row">
+      <span class="tag" [class.tag-found]="oglas.tip === TipOglasa.Nadjeno" [class.tag-lost]="oglas.tip === TipOglasa.Izgubljeno">
+        {{ oglas.tip === TipOglasa.Nadjeno ? 'Nađeno' : 'Izgubljeno' }}
+      </span>
+      <span class="ago text-muted">{{ relativeTime(oglas.datumKreiranja) }}</span>
+    </div>
+    <span class="title">{{ oglas.naziv }}</span>
+    <span class="submeta text-muted">{{ KATEGORIJA_LABELS[oglas.kategorija] }} · {{ oglas.grad }}</span>
+  </div>
+</a>

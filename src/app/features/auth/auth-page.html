@@ -1,0 +1,50 @@
+<div class="page auth-page">
+  <div class="brand-kicker">Lost&amp;Found</div>
+  <h1>Izgubio si?<br />Neko ga je našao.</h1>
+  <p class="text-muted">
+    Objavi šta si izgubio ili našao. Admin proverava podudaranje pre nego što se bilo šta podeli.
+  </p>
+
+  <div class="seg" style="margin: var(--space-4) 0">
+    <button type="button" class="seg-opt" [class.active]="tab() === 'login'" (click)="setTab('login')">
+      Prijava
+    </button>
+    <button type="button" class="seg-opt" [class.active]="tab() === 'signup'" (click)="setTab('signup')">
+      Registracija
+    </button>
+  </div>
+
+  @if (tab() === 'login') {
+    <form (ngSubmit)="submitLogin()">
+      <div class="field">
+        <label for="login-username">Korisničko ime</label>
+        <input id="login-username" class="input" name="loginKorisnickoIme" [(ngModel)]="loginKorisnickoIme" required />
+      </div>
+      <div class="field">
+        <label for="login-password">Lozinka</label>
+        <input id="login-password" class="input" type="password" name="loginLozinka" [(ngModel)]="loginLozinka" required />
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="submitting()">Prijavi se</button>
+    </form>
+  } @else {
+    <form (ngSubmit)="submitSignup()">
+      <div class="field">
+        <label for="signup-username">Korisničko ime</label>
+        <input id="signup-username" class="input" name="signupKorisnickoIme" [(ngModel)]="signupKorisnickoIme" required />
+      </div>
+      <div class="field">
+        <label for="signup-email">Email</label>
+        <input id="signup-email" class="input" type="email" name="signupEmail" [(ngModel)]="signupEmail" required />
+      </div>
+      <div class="field">
+        <label for="signup-password">Lozinka</label>
+        <input id="signup-password" class="input" type="password" name="signupLozinka" [(ngModel)]="signupLozinka" required minlength="6" />
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="submitting()">Registruj se</button>
+    </form>
+  }
+
+  <a class="btn btn-ghost btn-block" routerLink="/" style="margin-top: var(--space-2)">
+    Nastavi bez naloga
+  </a>
+</div>

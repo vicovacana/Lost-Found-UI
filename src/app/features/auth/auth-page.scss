@@ -1,0 +1,19 @@
+.auth-page {
+  max-width: 400px;
+  padding-top: var(--space-8);
+}
+
+.brand-kicker {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: var(--space-3);
+}
+
+h1 {
+  font-size: 36px;
+  margin-bottom: var(--space-3);
+}

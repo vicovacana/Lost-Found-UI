@@ -1,0 +1,69 @@
+<div class="page home-page">
+  <div class="home-header">
+    <select class="input grad-select" [ngModel]="grad()" (ngModelChange)="grad.set($event); onGradChange()">
+      <option value="">Svi gradovi</option>
+      @for (g of GRADOVI_SRBIJE; track g) {
+        <option [value]="g">{{ g }}</option>
+      }
+    </select>
+
+    <input
+      class="input"
+      type="search"
+      placeholder="Pretraga po nazivu ili opisu…"
+      [ngModel]="search()"
+      (ngModelChange)="search.set($event)"
+    />
+
+    <div class="seg">
+      <button type="button" class="seg-opt" [class.active]="tip() === 'svi'" (click)="setTip('svi')">Svi</button>
+      <button type="button" class="seg-opt" [class.active]="tip() === TipOglasa.Izgubljeno" (click)="setTip(TipOglasa.Izgubljeno)">
+        Izgubljeno
+      </button>
+      <button type="button" class="seg-opt" [class.active]="tip() === TipOglasa.Nadjeno" (click)="setTip(TipOglasa.Nadjeno)">
+        Nađeno
+      </button>
+    </div>
+
+    <div class="chip-row">
+      @for (k of KATEGORIJE; track k) {
+        <button type="button" class="chip" [class.active]="kategorija() === k" (click)="toggleKategorija(k)">
+          {{ KATEGORIJA_LABELS[k] }}
+        </button>
+      }
+    </div>
+
+    @if (auth.isAdmin()) {
+      <div class="seg">
+        <button type="button" class="seg-opt" [class.active]="statusFilter() === 'svi'" (click)="setStatusFilter('svi')">Svi</button>
+        <button type="button" class="seg-opt" [class.active]="statusFilter() === 'aktivni'" (click)="setStatusFilter('aktivni')">
+          Aktivni
+        </button>
+        <button type="button" class="seg-opt" [class.active]="statusFilter() === 'neaktivni'" (click)="setStatusFilter('neaktivni')">
+          Neaktivni
+        </button>
+      </div>
+    }
+  </div>
+
+  <div class="results-header">
+    <span class="text-muted results-count">{{ filtered().length }} oglasa</span>
+  </div>
+
+  @if (loading()) {
+    <div class="empty-state">
+      <p class="text-muted">Učitavanje…</p>
+    </div>
+  } @else if (filtered().length === 0) {
+    <div class="empty-state">
+      <h3>Nema oglasa</h3>
+      <p class="text-muted">Pokušaj da promeniš filtere ili pretragu.</p>
+    </div>
+  } @else {
+    <div class="oglas-list">
+      @for (oglas of filtered(); track oglas.oglasId) {
+        <app-oglas-card [oglas]="oglas" />
+      }
+    </div>
+  }
+</div>

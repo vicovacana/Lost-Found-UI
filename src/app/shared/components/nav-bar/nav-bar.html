@@ -1,0 +1,54 @@
+<nav class="nav">
+  <a class="nav-brand" routerLink="/">Lost&amp;Found</a>
+
+  <div class="nav-links">
+    <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M3 11.5 12 4l9 7.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M5.5 10v9.5a1 1 0 0 0 1 1H9a1 1 0 0 0 1-1V15a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4.5a1 1 0 0 0 1 1h2.5a1 1 0 0 0 1-1V10" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <span>Početna</span>
+    </a>
+
+    @if (auth.isAuthenticated()) {
+      <a class="nav-link" routerLink="/razgovori" routerLinkActive="active">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M4 5.5h16a1 1 0 0 1 1 1V15a1 1 0 0 1-1 1H9l-4.5 4V16H4a1 1 0 0 1-1-1V6.5a1 1 0 0 1 1-1Z" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span>Razgovori</span>
+      </a>
+    }
+
+    <a class="nav-link nav-fab" [routerLink]="auth.isAuthenticated() ? '/oglasi/novi' : '/auth'">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12h14" stroke-linecap="round" />
+      </svg>
+      <span>Novi oglas</span>
+    </a>
+
+    @if (auth.isAuthenticated()) {
+      <a class="nav-link" routerLink="/profil" routerLinkActive="active">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="8" r="3.4" />
+          <path d="M5 20c0-3.6 3.1-6.2 7-6.2s7 2.6 7 6.2" stroke-linecap="round" />
+        </svg>
+        <span>Profil</span>
+      </a>
+      <button type="button" class="nav-link nav-link-btn" (click)="logout()">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M15 4h3a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3" stroke-linecap="round" />
+          <path d="M10 8l-4 4 4 4M6 12h11" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span>Odjava</span>
+      </button>
+    } @else {
+      <a class="nav-link" routerLink="/auth" routerLinkActive="active">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M9 4h6a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H9" stroke-linecap="round" />
+          <path d="M14 8l4 4-4 4M18 12H4" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span>Prijava</span>
+      </a>
+    }
+  </div>
+</nav>

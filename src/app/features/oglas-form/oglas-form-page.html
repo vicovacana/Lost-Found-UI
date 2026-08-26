@@ -1,0 +1,88 @@
+<div class="page form-page">
+  <h1>{{ isEdit ? 'Izmeni oglas' : 'Novi oglas' }}</h1>
+
+  @if (loading()) {
+    <p class="text-muted">Učitavanje…</p>
+  } @else {
+    <form (ngSubmit)="submit()">
+      <div class="field">
+        <label>Tip</label>
+        <div class="seg">
+          <button type="button" class="seg-opt" [class.active]="form.tip === TipOglasa.Izgubljeno" (click)="form.tip = TipOglasa.Izgubljeno">
+            Izgubio sam
+          </button>
+          <button type="button" class="seg-opt" [class.active]="form.tip === TipOglasa.Nadjeno" (click)="form.tip = TipOglasa.Nadjeno">
+            Našao sam
+          </button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="naziv">Naziv predmeta</label>
+        <input id="naziv" class="input" name="naziv" [(ngModel)]="form.naziv" required maxlength="150" />
+      </div>
+
+      <div class="two-col">
+        <div class="field">
+          <label for="kategorija">Kategorija</label>
+          <select id="kategorija" class="input" name="kategorija" [(ngModel)]="form.kategorija">
+            @for (k of KATEGORIJE; track k) {
+              <option [ngValue]="k">{{ KATEGORIJA_LABELS[k] }}</option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <label for="grad">Grad</label>
+          <select id="grad" class="input" name="grad" [(ngModel)]="form.grad" required>
+            <option value="" disabled>Izaberi grad</option>
+            @for (g of GRADOVI_SRBIJE; track g) {
+              <option [value]="g">{{ g }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="opis">Opis</label>
+        <textarea id="opis" class="input" name="opis" [(ngModel)]="form.opis" required maxlength="2000" rows="4"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="foto">Fotografija (opciono)</label>
+        <input
+          id="foto"
+          class="input"
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif"
+          (change)="onFotografijaSelected($event)"
+        />
+        @if (uploading()) {
+          <span class="text-muted">Otpremanje…</span>
+        }
+        @if (form.fotografija) {
+          <div class="foto-preview-wrap">
+            <img class="foto-preview" [src]="form.fotografija" alt="Pregled fotografije" />
+            <button type="button" class="btn btn-ghost" (click)="removeFotografija()">Ukloni fotografiju</button>
+          </div>
+        }
+      </div>
+
+      <div class="field">
+        <div class="pin-header">
+          <label>Lokacija (opciono)</label>
+          <button type="button" class="btn btn-ghost" (click)="useMyLocation()">Koristi moju lokaciju</button>
+        </div>
+        <div class="map-slot">
+          <app-map-view mode="pick" [lat]="form.latitude" [lng]="form.longitude" (pinChange)="onPinChange($event)" />
+        </div>
+        @if (form.latitude !== null && form.longitude !== null) {
+          <span class="coords text-muted">lat {{ form.latitude!.toFixed(5) }} · lng {{ form.longitude!.toFixed(5) }}</span>
+        }
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="submitting()">
+        {{ isEdit ? 'Sačuvaj izmene' : 'Objavi oglas' }}
+      </button>
+    </form>
+  }
+</div>

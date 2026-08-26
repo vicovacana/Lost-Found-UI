@@ -1,0 +1,30 @@
+<div class="page admin-tajna-page">
+  <div class="brand-kicker">Lost&amp;Found · interno</div>
+  <h1>Registracija admina</h1>
+  <p class="text-muted">
+    Ova forma nije linkovana nigde u aplikaciji. Pravi admin nalog samo uz tačan tajni kod
+    (podešava se na backendu preko <code>Admin:RegistrationSecret</code>).
+  </p>
+
+  <form (ngSubmit)="submit()">
+    <div class="field">
+      <label for="at-username">Korisničko ime</label>
+      <input id="at-username" class="input" name="korisnickoIme" [(ngModel)]="korisnickoIme" required />
+    </div>
+    <div class="field">
+      <label for="at-email">Email</label>
+      <input id="at-email" class="input" type="email" name="email" [(ngModel)]="email" required />
+    </div>
+    <div class="field">
+      <label for="at-password">Lozinka</label>
+      <input id="at-password" class="input" type="password" name="lozinka" [(ngModel)]="lozinka" required minlength="6" />
+    </div>
+    <div class="field">
+      <label for="at-secret">Tajni kod</label>
+      <input id="at-secret" class="input" type="password" name="tajniKod" [(ngModel)]="tajniKod" required />
+    </div>
+    <button type="submit" class="btn btn-primary btn-block" [disabled]="submitting()">
+      Napravi admin nalog
+    </button>
+  </form>
+</div>

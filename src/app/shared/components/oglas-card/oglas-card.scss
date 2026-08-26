@@ -1,0 +1,54 @@
+.oglas-card {
+  display: flex;
+  flex-direction: row;
+  gap: 13px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.thumb {
+  width: 72px;
+  height: 72px;
+  flex: none;
+  border-radius: 6px;
+  overflow: hidden;
+  background: repeating-linear-gradient(135deg, var(--color-bg) 0 6px, var(--color-neutral-300) 6px 12px);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  justify-content: center;
+}
+
+.meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ago {
+  font-size: 11px;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.submeta {
+  font-size: 12px;
+}
