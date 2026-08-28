@@ -21,12 +21,10 @@
       @for (p of pending(); track p.korisnikId) {
         <div class="pending-row">
           <span>{{ p.korisnickoIme }}</span>
-          <span class="pending-actions">
-            <button type="button" class="btn btn-secondary" (click)="odluciPotrazivanje(p, StatusPotrazivanja.Prihvaceno)">Prihvati</button>
-            <button type="button" class="btn btn-secondary" (click)="odluciPotrazivanje(p, StatusPotrazivanja.Odbijeno)">Odbij</button>
-          </span>
+          <button type="button" class="btn btn-secondary" (click)="odluciPotrazivanje(p, StatusPotrazivanja.Prihvaceno)">Prihvati</button>
         </div>
       }
+      <button type="button" class="btn btn-danger btn-block" (click)="odbijSve()">Odbij sve</button>
     </div>
   }
 

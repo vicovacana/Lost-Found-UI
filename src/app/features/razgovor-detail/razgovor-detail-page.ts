@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription, finalize, interval } from 'rxjs';
+import { Subscription, finalize, forkJoin, interval } from 'rxjs';
 import { StatusPotrazivanja, StatusRazgovora } from '../../core/models/enums';
 import { Poruka } from '../../core/models/poruka.model';
 import { Potrazivanje } from '../../core/models/potrazivanje.model';
@@ -102,6 +102,22 @@ export class RazgovorDetailPage implements OnInit, OnDestroy {
         this.pending.update((list) => list.filter((x) => x.korisnikId !== p.korisnikId));
         this.toast.success('Potraživanje odbijeno.');
       }
+    });
+  }
+
+  odbijSve(): void {
+    const oglasId = this.razgovor()?.oglasId;
+    const svi = this.pending();
+    if (!oglasId || svi.length === 0) return;
+
+    forkJoin(
+      svi.map((p) => this.potrazivanjeService.updateStatus(oglasId, p.korisnikId, StatusPotrazivanja.Odbijeno)),
+    ).subscribe(() => {
+      this.pending.set([]);
+      this.razgovorService.updateStatus(this.razgovorId, StatusRazgovora.Zatvoren).subscribe((r) => {
+        this.razgovor.set(r);
+      });
+      this.toast.success('Sva potraživanja su odbijena. Razgovor je zatvoren.');
     });
   }
 
