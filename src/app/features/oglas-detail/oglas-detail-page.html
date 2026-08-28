@@ -59,7 +59,9 @@
 
   <div class="page action-bar">
     @if (!auth.isAuthenticated()) {
-      <a class="btn btn-primary btn-block" routerLink="/auth">Prijavi se da bi tvrdio da je tvoje</a>
+      <a class="btn btn-primary btn-block" routerLink="/auth">
+        {{ o.tip === TipOglasa.Nadjeno ? 'Prijavi se da bi tvrdio da je tvoje' : 'Prijavi se da bi tvrdio da si našao' }}
+      </a>
     } @else if (auth.isAdmin()) {
     } @else if (isOwner) {
       <a class="btn btn-secondary btn-block" routerLink="/razgovori">Vidi moje razgovore</a>
