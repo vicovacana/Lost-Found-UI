@@ -142,6 +142,10 @@
 @include mixins.desktop {
   :host {
     height: calc(100dvh - var(--nav-height));
+    max-width: 720px;
+    margin: 0 auto;
+    border-left: 1px solid var(--color-divider);
+    border-right: 1px solid var(--color-divider);
   }
 
   .chat-input-bar {

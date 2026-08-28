@@ -73,7 +73,7 @@
       }
     } @else {
       <button type="button" class="btn btn-primary btn-block" [disabled]="claiming()" (click)="claim()">
-        Ovo je moje
+        {{ o.tip === TipOglasa.Nadjeno ? 'Ovo je moje' : 'Našao sam' }}
       </button>
     }
 

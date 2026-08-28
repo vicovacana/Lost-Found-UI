@@ -28,14 +28,28 @@
 }
 
 @include mixins.desktop {
-  .home-header {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
+  .home-page {
+    max-width: 960px;
+  }
 
-    .seg,
+  .home-header {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    column-gap: var(--space-3);
+    row-gap: var(--space-3);
+
+    .grad-select {
+      max-width: none;
+    }
+
+    .seg {
+      grid-column: 1 / -1;
+      justify-self: start;
+      min-width: 280px;
+    }
+
     .chip-row {
-      flex: 1 0 auto;
+      grid-column: 1 / -1;
     }
   }
 

@@ -4,7 +4,7 @@
   @if (loading()) {
     <p class="text-muted">Učitavanje…</p>
   } @else {
-    <form (ngSubmit)="submit()">
+    <form #oglasForm="ngForm" (ngSubmit)="submit()">
       <div class="field">
         <label>Tip</label>
         <div class="seg">
@@ -96,7 +96,7 @@
         }
       </div>
 
-      <button type="submit" class="btn btn-primary btn-block" [disabled]="submitting()">
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="submitting() || oglasForm.invalid">
         {{ isEdit ? 'Sačuvaj izmene' : 'Objavi oglas' }}
       </button>
     </form>
