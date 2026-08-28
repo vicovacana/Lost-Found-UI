@@ -51,6 +51,9 @@
       <button type="button" class="btn btn-primary" [disabled]="sending()" (click)="sendMessage()">Pošalji</button>
     } @else {
       <span class="text-muted">Razgovor je zatvoren.</span>
+      @if (mojePotrazivanje(); as claim) {
+        <app-status-tag [potrazivanje]="claim.status" />
+      }
     }
   </div>
 } @else {

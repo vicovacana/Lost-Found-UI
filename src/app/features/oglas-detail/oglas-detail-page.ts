@@ -67,6 +67,7 @@ export class OglasDetailPage implements OnInit {
         this.myClaim.set(p);
         this.claiming.set(false);
         this.toast.success('Zahtev je poslat.');
+        this.loadRazgovor();
       },
       error: () => this.claiming.set(false),
     });
@@ -103,15 +104,19 @@ export class OglasDetailPage implements OnInit {
       });
     }
 
-    this.razgovorService
-      .getForOglas(this.oglasId)
-      .pipe(catchError(() => of(null)))
-      .subscribe((r) => this.razgovor.set(r));
+    this.loadRazgovor();
 
     if (this.auth.isAdmin()) {
       this.potrazivanjeService.getForOglas(this.oglasId).subscribe((claims) => {
         this.potrazivanja.set(claims);
       });
     }
+  }
+
+  private loadRazgovor(): void {
+    this.razgovorService
+      .getForOglas(this.oglasId)
+      .pipe(catchError(() => of(null)))
+      .subscribe((r) => this.razgovor.set(r));
   }
 }
