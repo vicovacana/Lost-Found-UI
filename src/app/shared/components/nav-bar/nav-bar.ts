@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
@@ -9,12 +9,23 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrl: './nav-bar.scss',
 })
 export class NavBar {
+  protected confirmingLogout = signal(false);
+
   constructor(
     protected readonly auth: AuthService,
     private readonly router: Router,
   ) {}
 
-  logout(): void {
+  askLogout(): void {
+    this.confirmingLogout.set(true);
+  }
+
+  cancelLogout(): void {
+    this.confirmingLogout.set(false);
+  }
+
+  confirmLogout(): void {
+    this.confirmingLogout.set(false);
     this.auth.logout();
     this.router.navigateByUrl('/');
   }

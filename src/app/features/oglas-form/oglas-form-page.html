@@ -8,10 +8,10 @@
       <div class="field">
         <label>Tip</label>
         <div class="seg">
-          <button type="button" class="seg-opt" [class.active]="form.tip === TipOglasa.Izgubljeno" (click)="form.tip = TipOglasa.Izgubljeno">
+          <button type="button" class="seg-opt" [class.active]="form.tip === TipOglasa.Izgubljeno" (click)="setTip(TipOglasa.Izgubljeno)">
             Izgubio sam
           </button>
-          <button type="button" class="seg-opt" [class.active]="form.tip === TipOglasa.Nadjeno" (click)="form.tip = TipOglasa.Nadjeno">
+          <button type="button" class="seg-opt" [class.active]="form.tip === TipOglasa.Nadjeno" (click)="setTip(TipOglasa.Nadjeno)">
             Našao sam
           </button>
         </div>
@@ -49,29 +49,45 @@
 
       <div class="field">
         <label for="foto">Fotografija (opciono)</label>
-        <input
-          id="foto"
-          class="input"
-          type="file"
-          accept="image/jpeg,image/png,image/webp,image/gif"
-          (change)="onFotografijaSelected($event)"
-        />
-        @if (uploading()) {
-          <span class="text-muted">Otpremanje…</span>
-        }
-        @if (form.fotografija) {
+        <div class="file-input-row">
+          <button type="button" class="btn btn-secondary" (click)="fotoInput.click()">Odaberi fajl</button>
+          <span class="file-input-name text-muted">
+            {{ selectedFileName() || (form.fotografija ? 'Trenutna fotografija' : 'Nije odabrano') }}
+          </span>
+          <input
+            #fotoInput
+            id="foto"
+            class="file-input-native"
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            (change)="onFotografijaSelected($event)"
+          />
+        </div>
+        @if (previewUrl() || form.fotografija) {
           <div class="foto-preview-wrap">
-            <img class="foto-preview" [src]="form.fotografija" alt="Pregled fotografije" />
+            <img class="foto-preview" [src]="previewUrl() || form.fotografija" alt="Pregled fotografije" />
             <button type="button" class="btn btn-ghost" (click)="removeFotografija()">Ukloni fotografiju</button>
           </div>
         }
       </div>
 
-      <div class="field">
-        <div class="pin-header">
-          <label>Lokacija (opciono)</label>
-          <button type="button" class="btn btn-ghost" (click)="useMyLocation()">Koristi moju lokaciju</button>
+      @if (form.tip === TipOglasa.Nadjeno) {
+        <div class="field">
+          <label for="opis-lokacije">Opis lokacije (opciono)</label>
+          <textarea
+            id="opis-lokacije"
+            class="input"
+            name="opisLokacije"
+            [(ngModel)]="form.opisLokacije"
+            maxlength="1000"
+            rows="3"
+            placeholder="Gde tačno je predmet nađen? Ovaj opis se ne prikazuje javno — vidljiv je tek u razgovoru, nakon što potvrdiš čije je potraživanje."
+          ></textarea>
         </div>
+      }
+
+      <div class="field">
+        <label>Lokacija (opciono)</label>
         <div class="map-slot">
           <app-map-view mode="pick" [lat]="form.latitude" [lng]="form.longitude" (pinChange)="onPinChange($event)" />
         </div>

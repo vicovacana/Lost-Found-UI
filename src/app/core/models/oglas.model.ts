@@ -11,6 +11,7 @@ export interface Oglas {
   latitude: number | null;
   longitude: number | null;
   fotografija: string | null;
+  opisLokacije: string | null;
   kreatorId: number;
   kreatorKorisnickoIme: string;
   adminId: number | null;
@@ -25,6 +26,7 @@ export interface OglasCreate {
   latitude: number | null;
   longitude: number | null;
   fotografija: string | null;
+  opisLokacije: string | null;
 }
 
 export type OglasUpdate = OglasCreate;

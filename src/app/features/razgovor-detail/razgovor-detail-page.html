@@ -8,6 +8,13 @@
     <app-status-tag [razgovor]="r.statusRazgovora" />
   </div>
 
+  @if (r.opisLokacije) {
+    <div class="location-panel">
+      <span class="location-title">Opis lokacije</span>
+      <p>{{ r.opisLokacije }}</p>
+    </div>
+  }
+
   @if (auth.isAdmin() && pending().length > 0) {
     <div class="pending-panel">
       <span class="pending-title">Potraživanja na čekanju</span>

@@ -1,6 +1,6 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { KATEGORIJA_LABELS, StatusPotrazivanja, TipOglasa } from '../../core/models/enums';
+import { KATEGORIJA_LABELS, TipOglasa } from '../../core/models/enums';
 import { Korisnik } from '../../core/models/korisnik.model';
 import { Oglas } from '../../core/models/oglas.model';
 import { Potrazivanje } from '../../core/models/potrazivanje.model';
@@ -26,10 +26,6 @@ export class ProfilePage {
   protected mojaPotrazivanja = signal<Potrazivanje[]>([]);
   protected tab = signal<Tab>('oglasi');
   protected loading = signal(true);
-
-  protected returnedCount = computed(
-    () => this.mojaPotrazivanja().filter((p) => p.status === StatusPotrazivanja.Prihvaceno).length,
-  );
 
   constructor(
     private readonly korisnikService: KorisnikService,

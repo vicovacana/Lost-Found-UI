@@ -7,27 +7,14 @@
         <span class="text-muted" style="font-size: 12px">{{ user.email }}</span>
       </div>
     </div>
-
-    <div class="stats-row">
-      <div class="stat">
-        <span class="stat-value">{{ mojiOglasi().length }}</span>
-        <span class="stat-label">Oglasi</span>
-      </div>
-      <div class="stat">
-        <span class="stat-value">{{ mojaPotrazivanja().length }}</span>
-        <span class="stat-label">Potraživanja</span>
-      </div>
-      <div class="stat">
-        <span class="stat-value accent">{{ returnedCount() }}</span>
-        <span class="stat-label">Vraćeno</span>
-      </div>
-    </div>
   }
 
   <div class="seg">
-    <button type="button" class="seg-opt" [class.active]="tab() === 'oglasi'" (click)="setTab('oglasi')">Moji oglasi</button>
+    <button type="button" class="seg-opt" [class.active]="tab() === 'oglasi'" (click)="setTab('oglasi')">
+      Moji oglasi ({{ mojiOglasi().length }})
+    </button>
     <button type="button" class="seg-opt" [class.active]="tab() === 'potrazivanja'" (click)="setTab('potrazivanja')">
-      Moja potraživanja
+      Moja potraživanja ({{ mojaPotrazivanja().length }})
     </button>
   </div>
 

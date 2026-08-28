@@ -6,4 +6,5 @@ export interface Razgovor {
   statusRazgovora: StatusRazgovora;
   oglasId: number;
   oglasNaziv: string;
+  opisLokacije: string | null;
 }

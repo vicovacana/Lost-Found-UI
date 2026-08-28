@@ -19,12 +19,14 @@
       </a>
     }
 
-    <a class="nav-link nav-fab" [routerLink]="auth.isAuthenticated() ? '/oglasi/novi' : '/auth'">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M12 5v14M5 12h14" stroke-linecap="round" />
-      </svg>
-      <span>Novi oglas</span>
-    </a>
+    @if (auth.isAuthenticated() && !auth.isAdmin()) {
+      <a class="nav-link nav-fab" routerLink="/oglasi/novi">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M5 12h14" stroke-linecap="round" />
+        </svg>
+        <span>Novi oglas</span>
+      </a>
+    }
 
     @if (auth.isAuthenticated()) {
       <a class="nav-link" routerLink="/profil" routerLinkActive="active">
@@ -34,7 +36,7 @@
         </svg>
         <span>Profil</span>
       </a>
-      <button type="button" class="nav-link nav-link-btn" (click)="logout()">
+      <button type="button" class="nav-link nav-link-btn" (click)="askLogout()">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <path d="M15 4h3a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3" stroke-linecap="round" />
           <path d="M10 8l-4 4 4 4M6 12h11" stroke-linecap="round" stroke-linejoin="round" />
@@ -52,3 +54,16 @@
     }
   </div>
 </nav>
+
+@if (confirmingLogout()) {
+  <div class="modal-overlay" (click)="cancelLogout()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h3>Odjava</h3>
+      <p class="text-muted">Da li si siguran da želiš da se odjaviš?</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" (click)="cancelLogout()">Otkaži</button>
+        <button type="button" class="btn btn-danger" (click)="confirmLogout()">Odjavi se</button>
+      </div>
+    </div>
+  </div>
+}

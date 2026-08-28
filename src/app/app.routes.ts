@@ -15,6 +15,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/oglas-form/oglas-form-page').then((m) => m.OglasFormPage),
     canActivate: [authGuard],
+    data: { standardniKorisnikOnly: true },
   },
   {
     path: 'oglasi/:id',

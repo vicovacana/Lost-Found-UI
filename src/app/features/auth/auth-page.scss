@@ -17,3 +17,36 @@ h1 {
   font-size: 36px;
   margin-bottom: var(--space-3);
 }
+
+.password-wrap {
+  position: relative;
+
+  .input {
+    padding-right: 40px;
+  }
+}
+
+.password-toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--color-neutral-500);
+  cursor: pointer;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    color: var(--color-neutral-700);
+  }
+}

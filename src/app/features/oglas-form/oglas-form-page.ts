@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -15,7 +15,7 @@ import { MapView } from '../../shared/components/map-view/map-view';
   templateUrl: './oglas-form-page.html',
   styleUrl: './oglas-form-page.scss',
 })
-export class OglasFormPage implements OnInit {
+export class OglasFormPage implements OnInit, OnDestroy {
   protected readonly GRADOVI_SRBIJE = GRADOVI_SRBIJE;
   protected readonly KATEGORIJE = KATEGORIJE;
   protected readonly KATEGORIJA_LABELS = KATEGORIJA_LABELS;
@@ -24,7 +24,10 @@ export class OglasFormPage implements OnInit {
   protected isEdit = false;
   protected submitting = signal(false);
   protected loading = signal(false);
-  protected uploading = signal(false);
+  protected previewUrl = signal<string | null>(null);
+  protected selectedFileName = signal<string | null>(null);
+
+  private selectedFile: File | null = null;
 
   protected form: OglasCreate = {
     naziv: '',
@@ -35,6 +38,7 @@ export class OglasFormPage implements OnInit {
     latitude: null,
     longitude: null,
     fotografija: null,
+    opisLokacije: null,
   };
 
   private oglasId: number | null = null;
@@ -63,6 +67,7 @@ export class OglasFormPage implements OnInit {
             latitude: o.latitude,
             longitude: o.longitude,
             fotografija: o.fotografija,
+            opisLokacije: o.opisLokacije,
           };
           this.loading.set(false);
         },
@@ -76,18 +81,36 @@ export class OglasFormPage implements OnInit {
     const fajl = input.files?.[0];
     if (!fajl) return;
 
-    this.uploading.set(true);
-    this.oglasService
-      .uploadFotografija(fajl)
-      .pipe(finalize(() => this.uploading.set(false)))
-      .subscribe({
-        next: (res) => (this.form.fotografija = res.url),
-        error: () => (input.value = ''),
-      });
+    this.selectedFile = fajl;
+    this.selectedFileName.set(fajl.name);
+    this.revokePreview();
+    this.previewUrl.set(URL.createObjectURL(fajl));
   }
 
   removeFotografija(): void {
+    this.selectedFile = null;
+    this.selectedFileName.set(null);
+    this.revokePreview();
     this.form.fotografija = null;
+  }
+
+  ngOnDestroy(): void {
+    this.revokePreview();
+  }
+
+  private revokePreview(): void {
+    const current = this.previewUrl();
+    if (current) {
+      URL.revokeObjectURL(current);
+      this.previewUrl.set(null);
+    }
+  }
+
+  setTip(tip: TipOglasa): void {
+    this.form.tip = tip;
+    if (tip === TipOglasa.Izgubljeno) {
+      this.form.opisLokacije = null;
+    }
   }
 
   onPinChange(pin: { lat: number; lng: number }): void {
@@ -95,19 +118,23 @@ export class OglasFormPage implements OnInit {
     this.form.longitude = pin.lng;
   }
 
-  useMyLocation(): void {
-    if (!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition((pos) => {
-      this.form.latitude = pos.coords.latitude;
-      this.form.longitude = pos.coords.longitude;
-    });
-  }
-
   submit(): void {
     if (!this.form.naziv || !this.form.opis || !this.form.grad) return;
 
     this.submitting.set(true);
-    const dto: OglasCreate = { ...this.form, fotografija: this.form.fotografija || null };
+
+    if (this.selectedFile) {
+      this.oglasService.uploadFotografija(this.selectedFile).subscribe({
+        next: (res) => this.createOrUpdate(res.url),
+        error: () => this.submitting.set(false),
+      });
+    } else {
+      this.createOrUpdate(this.form.fotografija);
+    }
+  }
+
+  private createOrUpdate(fotografija: string | null): void {
+    const dto: OglasCreate = { ...this.form, fotografija };
     const request$ =
       this.isEdit && this.oglasId
         ? this.oglasService.update(this.oglasId, dto)

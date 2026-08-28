@@ -16,6 +16,9 @@ export class AuthPage {
   protected tab = signal<Tab>('login');
   protected submitting = signal(false);
 
+  protected loginPasswordVisible = signal(false);
+  protected signupPasswordVisible = signal(false);
+
   protected loginKorisnickoIme = '';
   protected loginLozinka = '';
 
@@ -31,6 +34,14 @@ export class AuthPage {
 
   setTab(tab: Tab): void {
     this.tab.set(tab);
+  }
+
+  toggleLoginPasswordVisible(): void {
+    this.loginPasswordVisible.update((v) => !v);
+  }
+
+  toggleSignupPasswordVisible(): void {
+    this.signupPasswordVisible.update((v) => !v);
   }
 
   submitLogin(): void {
