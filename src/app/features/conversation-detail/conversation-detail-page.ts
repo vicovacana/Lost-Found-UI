@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, signal } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription, finalize, forkJoin, interval } from 'rxjs';
@@ -11,6 +11,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { MessageService } from '../../core/services/message.service';
 import { ClaimService } from '../../core/services/claim.service';
 import { ConversationService } from '../../core/services/conversation.service';
+import { ListingService } from '../../core/services/listing.service';
 import { ToastService } from '../../core/services/toast.service';
 import { StatusTag } from '../../shared/components/status-tag/status-tag';
 
@@ -28,11 +29,18 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
 
   protected conversation = signal<Conversation | null>(null);
   protected messages = signal<Message[]>([]);
-  protected pending = signal<Claim[]>([]);
+  protected allClaims = signal<Claim[]>([]);
   protected myClaim = signal<Claim | null>(null);
+  protected isOwner = signal(false);
   protected loading = signal(true);
   protected sending = signal(false);
   protected newMessage = '';
+
+  protected pending = computed(() => this.allClaims().filter((c) => c.status === ClaimStatus.Pending));
+  protected acceptedClaim = computed(() => this.allClaims().find((c) => c.status === ClaimStatus.Accepted) ?? null);
+  protected allRejected = computed(
+    () => this.allClaims().length > 0 && this.allClaims().every((c) => c.status === ClaimStatus.Rejected),
+  );
 
   @ViewChild('scrollAnchor') private scrollAnchor?: ElementRef<HTMLDivElement>;
 
@@ -45,6 +53,7 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     private readonly conversationService: ConversationService,
     private readonly messageService: MessageService,
     private readonly claimService: ClaimService,
+    private readonly listingService: ListingService,
     private readonly toast: ToastService,
   ) {}
 
@@ -56,8 +65,10 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
         this.loading.set(false);
         this.loadMessages();
         this.loadMyClaim(r.listingId);
-        if (this.auth.isAdmin() && r.status === ConversationStatus.Open) {
-          this.loadPending(r.listingId);
+        if (this.auth.isAdmin()) {
+          this.loadClaims(r.listingId);
+        } else {
+          this.checkOwnerAndLoadClaims(r.listingId);
         }
         this.pollSub = interval(POLL_INTERVAL_MS).subscribe(() => {
           this.loadMessages();
@@ -95,11 +106,21 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     if (!listingId) return;
     this.claimService.updateStatus(listingId, p.userId, status).subscribe(() => {
       if (status === ClaimStatus.Accepted) {
-        this.pending.set([]);
+        this.allClaims.update((list) =>
+          list.map((c) =>
+            c.userId === p.userId
+              ? { ...c, status: ClaimStatus.Accepted }
+              : c.status === ClaimStatus.Pending
+                ? { ...c, status: ClaimStatus.Rejected }
+                : c,
+          ),
+        );
         this.conversation.update((r) => (r ? { ...r, status: ConversationStatus.Closed } : r));
         this.toast.success('Potraživanje prihvaćeno. Razgovor je automatski zatvoren.');
       } else {
-        this.pending.update((list) => list.filter((x) => x.userId !== p.userId));
+        this.allClaims.update((list) =>
+          list.map((c) => (c.userId === p.userId ? { ...c, status: ClaimStatus.Rejected } : c)),
+        );
         this.toast.success('Potraživanje odbijeno.');
       }
     });
@@ -113,7 +134,9 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     forkJoin(
       all.map((p) => this.claimService.updateStatus(listingId, p.userId, ClaimStatus.Rejected)),
     ).subscribe(() => {
-      this.pending.set([]);
+      this.allClaims.update((list) =>
+        list.map((c) => (c.status === ClaimStatus.Pending ? { ...c, status: ClaimStatus.Rejected } : c)),
+      );
       this.conversationService.updateStatus(this.conversationId, ConversationStatus.Closed).subscribe((r) => {
         this.conversation.set(r);
       });
@@ -143,9 +166,17 @@ export class ConversationDetailPage implements OnInit, OnDestroy {
     });
   }
 
-  private loadPending(listingId: number): void {
+  private loadClaims(listingId: number): void {
     this.claimService.getForListing(listingId).subscribe((claims) => {
-      this.pending.set(claims.filter((c) => c.status === ClaimStatus.Pending));
+      this.allClaims.set(claims);
+    });
+  }
+
+  private checkOwnerAndLoadClaims(listingId: number): void {
+    this.listingService.getById(listingId).subscribe((listing) => {
+      const owner = listing.creatorId === this.currentUserId;
+      this.isOwner.set(owner);
+      if (owner) this.loadClaims(listingId);
     });
   }
 
