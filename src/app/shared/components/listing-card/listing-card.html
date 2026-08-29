@@ -1,0 +1,20 @@
+<a class="oglas-card card" [routerLink]="['/oglasi', listing.listingId]">
+  <div class="thumb">
+    @if (listing.photo) {
+      <img [src]="listing.photo" [alt]="listing.title" />
+    } @else {
+      <span class="thumb-placeholder"></span>
+    }
+  </div>
+
+  <div class="body">
+    <div class="meta-row">
+      <span class="tag" [class.tag-found]="listing.type === ListingType.Found" [class.tag-lost]="listing.type === ListingType.Lost">
+        {{ listing.type === ListingType.Found ? 'Nađeno' : 'Izgubljeno' }}
+      </span>
+      <span class="ago text-muted">{{ relativeTime(listing.createdAt) }}</span>
+    </div>
+    <span class="title">{{ listing.title }}</span>
+    <span class="submeta text-muted">{{ CATEGORY_LABELS[listing.category] }} · {{ listing.city }}</span>
+  </div>
+</a>

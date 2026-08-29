@@ -1,19 +1,19 @@
 import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { KATEGORIJA_LABELS, TipOglasa } from '../../../core/models/enums';
-import { Oglas } from '../../../core/models/oglas.model';
+import { CATEGORY_LABELS, ListingType } from '../../../core/models/enums';
+import { Listing } from '../../../core/models/listing.model';
 
 @Component({
-  selector: 'app-oglas-card',
+  selector: 'app-listing-card',
   imports: [RouterLink],
-  templateUrl: './oglas-card.html',
-  styleUrl: './oglas-card.scss',
+  templateUrl: './listing-card.html',
+  styleUrl: './listing-card.scss',
 })
-export class OglasCard {
-  @Input({ required: true }) oglas!: Oglas;
+export class ListingCard {
+  @Input({ required: true }) listing!: Listing;
 
-  protected readonly TipOglasa = TipOglasa;
-  protected readonly KATEGORIJA_LABELS = KATEGORIJA_LABELS;
+  protected readonly ListingType = ListingType;
+  protected readonly CATEGORY_LABELS = CATEGORY_LABELS;
 
   protected relativeTime(iso: string): string {
     const diffMs = Date.now() - new Date(iso).getTime();

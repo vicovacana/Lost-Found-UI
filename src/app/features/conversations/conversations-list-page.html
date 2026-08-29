@@ -1,0 +1,30 @@
+<div class="page razgovori-page">
+  <h1>Razgovori</h1>
+
+  <div class="chip-row" style="margin-bottom: var(--space-4)">
+    <button type="button" class="chip" [class.active]="tab() === ConversationStatus.Open" (click)="setTab(ConversationStatus.Open)">
+      Otvoreni · {{ openCount() }}
+    </button>
+    <button type="button" class="chip" [class.active]="tab() === ConversationStatus.Closed" (click)="setTab(ConversationStatus.Closed)">
+      Zatvoreni · {{ closedCount() }}
+    </button>
+  </div>
+
+  @if (loading()) {
+    <p class="text-muted">Učitavanje…</p>
+  } @else if (filtered().length === 0) {
+    <div class="empty-state">
+      <p class="text-muted">Nema razgovora u ovoj kategoriji.</p>
+    </div>
+  } @else {
+    <div class="thread-list">
+      @for (r of filtered(); track r.conversationId) {
+        <a class="thread-item card" [routerLink]="['/razgovori', r.conversationId]">
+          <span class="thread-title">{{ r.listingTitle }}</span>
+          <span class="thread-meta text-muted">{{ r.createdAt | date: 'd. MMM yyyy' }}</span>
+          <app-status-tag [conversation]="r.status" />
+        </a>
+      }
+    </div>
+  }
+</div>

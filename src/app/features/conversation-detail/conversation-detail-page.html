@@ -1,0 +1,61 @@
+@if (loading()) {
+  <div class="page">
+    <p class="text-muted">Učitavanje…</p>
+  </div>
+} @else if (conversation(); as r) {
+  <div class="chat-header">
+    <span class="chat-title">{{ r.listingTitle }}</span>
+    <app-status-tag [conversation]="r.status" />
+  </div>
+
+  @if (r.locationDescription) {
+    <div class="location-panel">
+      <span class="location-title">Opis lokacije</span>
+      <p>{{ r.locationDescription }}</p>
+    </div>
+  }
+
+  @if (auth.isAdmin() && pending().length > 0) {
+    <div class="pending-panel">
+      <span class="pending-title">Potraživanja na čekanju</span>
+      @for (p of pending(); track p.userId) {
+        <div class="pending-row">
+          <span>{{ p.username }}</span>
+          <button type="button" class="btn btn-secondary" (click)="decideClaim(p, ClaimStatus.Accepted)">Prihvati</button>
+        </div>
+      }
+      <button type="button" class="btn btn-danger btn-block" (click)="rejectAll()">Odbij sve</button>
+    </div>
+  }
+
+  <div class="chat-body">
+    @for (message of messages(); track message.messageId) {
+      <div class="message" [class.mine]="message.userId === currentUserId">
+        <span class="message-meta">{{ message.username }} · {{ message.createdAt | date: 'HH:mm' }}</span>
+        <span class="message-bubble">{{ message.content }}</span>
+      </div>
+    }
+    <div #scrollAnchor></div>
+  </div>
+
+  <div class="chat-input-bar">
+    @if (r.status === ConversationStatus.Open) {
+      <input
+        class="input"
+        placeholder="Napiši poruku…"
+        [(ngModel)]="newMessage"
+        (keydown.enter)="sendMessage()"
+      />
+      <button type="button" class="btn btn-primary" [disabled]="sending()" (click)="sendMessage()">Pošalji</button>
+    } @else {
+      <span class="text-muted">Razgovor je zatvoren.</span>
+      @if (myClaim(); as claim) {
+        <app-status-tag [claim]="claim.status" />
+      }
+    }
+  </div>
+} @else {
+  <div class="page">
+    <p class="text-muted">Razgovor nije pronađen.</p>
+  </div>
+}

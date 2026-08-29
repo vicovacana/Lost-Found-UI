@@ -1,4 +1,4 @@
-export const GRADOVI_SRBIJE: string[] = [
+export const SERBIAN_CITIES: string[] = [
   'Beograd',
   'Bor',
   'Valjevo',

@@ -1,9 +1,9 @@
 <div class="page profile-page">
   @if (me(); as user) {
     <div class="profile-header">
-      <span class="avatar-lg">{{ user.korisnickoIme.slice(0, 2).toUpperCase() }}</span>
+      <span class="avatar-lg">{{ user.username.slice(0, 2).toUpperCase() }}</span>
       <div class="profile-info">
-        <span class="username">{{ user.korisnickoIme }}</span>
+        <span class="username">{{ user.username }}</span>
         <span class="text-muted" style="font-size: 12px">{{ user.email }}</span>
       </div>
     </div>
@@ -12,10 +12,10 @@
   @if (!auth.isAdmin()) {
     <div class="seg">
       <button type="button" class="seg-opt" [class.active]="tab() === 'oglasi'" (click)="setTab('oglasi')">
-        Moji oglasi ({{ mojiOglasi().length }})
+        Moji oglasi ({{ myListings().length }})
       </button>
       <button type="button" class="seg-opt" [class.active]="tab() === 'potrazivanja'" (click)="setTab('potrazivanja')">
-        Moja potraživanja ({{ mojaPotrazivanja().length }})
+        Moja potraživanja ({{ myClaims().length }})
       </button>
     </div>
 
@@ -23,30 +23,30 @@
       @if (tab() === 'oglasi') {
         @if (loading()) {
           <p class="text-muted">Učitavanje…</p>
-        } @else if (mojiOglasi().length === 0) {
+        } @else if (myListings().length === 0) {
           <div class="empty-state">
             <p class="text-muted">Još uvek nemaš objavljenih oglasa.</p>
           </div>
         } @else {
-          @for (o of mojiOglasi(); track o.oglasId) {
-            <a class="list-item card" [routerLink]="['/oglasi', o.oglasId]">
-              <span class="li-title">{{ o.naziv }}</span>
+          @for (o of myListings(); track o.listingId) {
+            <a class="list-item card" [routerLink]="['/oglasi', o.listingId]">
+              <span class="li-title">{{ o.title }}</span>
               <span class="li-meta text-muted">
-                {{ o.tip === TipOglasa.Nadjeno ? 'Nađeno' : 'Izgubljeno' }} · {{ KATEGORIJA_LABELS[o.kategorija] }} · {{ o.grad }}
+                {{ o.type === ListingType.Found ? 'Nađeno' : 'Izgubljeno' }} · {{ CATEGORY_LABELS[o.category] }} · {{ o.city }}
               </span>
             </a>
           }
         }
       } @else {
-        @if (mojaPotrazivanja().length === 0) {
+        @if (myClaims().length === 0) {
           <div class="empty-state">
             <p class="text-muted">Nemaš aktivnih potraživanja.</p>
           </div>
         } @else {
-          @for (p of mojaPotrazivanja(); track p.oglasId) {
-            <a class="list-item card" [routerLink]="['/oglasi', p.oglasId]">
-              <span class="li-title">Oglas #{{ p.oglasId }}</span>
-              <app-status-tag [potrazivanje]="p.status" />
+          @for (p of myClaims(); track p.listingId) {
+            <a class="list-item card" [routerLink]="['/oglasi', p.listingId]">
+              <span class="li-title">Oglas #{{ p.listingId }}</span>
+              <app-status-tag [claim]="p.status" />
             </a>
           }
         }

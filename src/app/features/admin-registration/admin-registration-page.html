@@ -5,7 +5,7 @@
   <form (ngSubmit)="submit()">
     <div class="field">
       <label for="at-username">Korisničko ime</label>
-      <input id="at-username" class="input" name="korisnickoIme" [(ngModel)]="korisnickoIme" required />
+      <input id="at-username" class="input" name="username" [(ngModel)]="username" required />
     </div>
     <div class="field">
       <label for="at-email">Email</label>
@@ -13,11 +13,11 @@
     </div>
     <div class="field">
       <label for="at-password">Lozinka</label>
-      <input id="at-password" class="input" type="password" name="lozinka" [(ngModel)]="lozinka" required minlength="6" />
+      <input id="at-password" class="input" type="password" name="password" [(ngModel)]="password" required minlength="6" />
     </div>
     <div class="field">
       <label for="at-secret">Tajni kod</label>
-      <input id="at-secret" class="input" type="password" name="tajniKod" [(ngModel)]="tajniKod" required />
+      <input id="at-secret" class="input" type="password" name="secretCode" [(ngModel)]="secretCode" required />
     </div>
     <button type="submit" class="btn btn-primary btn-block" [disabled]="submitting()">
       Napravi admin nalog

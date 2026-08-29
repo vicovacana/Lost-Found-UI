@@ -13,10 +13,10 @@ import { AuthService } from '../../core/services/auth.service';
 export class AdminRegistrationPage {
   protected submitting = signal(false);
 
-  protected korisnickoIme = '';
+  protected username = '';
   protected email = '';
-  protected lozinka = '';
-  protected tajniKod = '';
+  protected password = '';
+  protected secretCode = '';
 
   constructor(
     private readonly auth: AuthService,
@@ -24,14 +24,14 @@ export class AdminRegistrationPage {
   ) {}
 
   submit(): void {
-    if (!this.korisnickoIme || !this.email || !this.lozinka || !this.tajniKod) return;
+    if (!this.username || !this.email || !this.password || !this.secretCode) return;
     this.submitting.set(true);
     this.auth
       .registerAdmin({
-        korisnickoIme: this.korisnickoIme,
+        username: this.username,
         email: this.email,
-        lozinka: this.lozinka,
-        tajniKod: this.tajniKod,
+        password: this.password,
+        secretCode: this.secretCode,
       })
       .pipe(finalize(() => this.submitting.set(false)))
       .subscribe((res) => {

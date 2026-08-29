@@ -1,25 +1,25 @@
 export interface RegisterRequest {
-  korisnickoIme: string;
+  username: string;
   email: string;
-  lozinka: string;
+  password: string;
 }
 
 export interface LoginRequest {
-  korisnickoIme: string;
-  lozinka: string;
+  username: string;
+  password: string;
 }
 
 export interface RegisterAdminRequest {
-  korisnickoIme: string;
+  username: string;
   email: string;
-  lozinka: string;
-  tajniKod: string;
+  password: string;
+  secretCode: string;
 }
 
 export interface AuthResponse {
   token: string;
-  korisnikId: number;
-  korisnickoIme: string;
+  userId: number;
+  username: string;
   email: string;
-  uloga: string;
+  role: string;
 }

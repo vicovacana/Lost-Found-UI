@@ -19,12 +19,12 @@ export class AuthPage {
   protected loginPasswordVisible = signal(false);
   protected signupPasswordVisible = signal(false);
 
-  protected loginKorisnickoIme = '';
-  protected loginLozinka = '';
+  protected loginUsername = '';
+  protected loginPassword = '';
 
-  protected signupKorisnickoIme = '';
+  protected signupUsername = '';
   protected signupEmail = '';
-  protected signupLozinka = '';
+  protected signupPassword = '';
 
   constructor(
     private readonly auth: AuthService,
@@ -45,10 +45,10 @@ export class AuthPage {
   }
 
   submitLogin(): void {
-    if (!this.loginKorisnickoIme || !this.loginLozinka) return;
+    if (!this.loginUsername || !this.loginPassword) return;
     this.submitting.set(true);
     this.auth
-      .login({ korisnickoIme: this.loginKorisnickoIme, lozinka: this.loginLozinka })
+      .login({ username: this.loginUsername, password: this.loginPassword })
       .pipe(finalize(() => this.submitting.set(false)))
       .subscribe((res) => {
         this.auth.setSession(res);
@@ -57,13 +57,13 @@ export class AuthPage {
   }
 
   submitSignup(): void {
-    if (!this.signupKorisnickoIme || !this.signupEmail || !this.signupLozinka) return;
+    if (!this.signupUsername || !this.signupEmail || !this.signupPassword) return;
     this.submitting.set(true);
     this.auth
       .register({
-        korisnickoIme: this.signupKorisnickoIme,
+        username: this.signupUsername,
         email: this.signupEmail,
-        lozinka: this.signupLozinka,
+        password: this.signupPassword,
       })
       .pipe(finalize(() => this.submitting.set(false)))
       .subscribe((res) => {

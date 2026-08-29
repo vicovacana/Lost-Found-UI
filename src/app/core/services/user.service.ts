@@ -1,19 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { Korisnik, KorisnikUpdate } from '../models/korisnik.model';
+import { User, UserUpdate } from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
-export class KorisnikService {
+export class UserService {
   private readonly base = `${environment.apiUrl}/korisnici`;
 
   constructor(private readonly http: HttpClient) {}
 
   getMe() {
-    return this.http.get<Korisnik>(`${this.base}/me`);
+    return this.http.get<User>(`${this.base}/me`);
   }
 
-  updateMe(dto: KorisnikUpdate) {
-    return this.http.put<Korisnik>(`${this.base}/me`, dto);
+  updateMe(dto: UserUpdate) {
+    return this.http.put<User>(`${this.base}/me`, dto);
   }
 }

@@ -1,8 +1,8 @@
 <div class="page home-page">
   <div class="home-header">
-    <select class="input grad-select" [ngModel]="grad()" (ngModelChange)="grad.set($event); onGradChange()">
+    <select class="input grad-select" [ngModel]="city()" (ngModelChange)="city.set($event); onCityChange()">
       <option value="">Svi gradovi</option>
-      @for (g of GRADOVI_SRBIJE; track g) {
+      @for (g of SERBIAN_CITIES; track g) {
         <option [value]="g">{{ g }}</option>
       }
     </select>
@@ -16,19 +16,19 @@
     />
 
     <div class="seg">
-      <button type="button" class="seg-opt" [class.active]="tip() === 'svi'" (click)="setTip('svi')">Svi</button>
-      <button type="button" class="seg-opt" [class.active]="tip() === TipOglasa.Izgubljeno" (click)="setTip(TipOglasa.Izgubljeno)">
+      <button type="button" class="seg-opt" [class.active]="type() === 'svi'" (click)="setType('svi')">Svi</button>
+      <button type="button" class="seg-opt" [class.active]="type() === ListingType.Lost" (click)="setType(ListingType.Lost)">
         Izgubljeno
       </button>
-      <button type="button" class="seg-opt" [class.active]="tip() === TipOglasa.Nadjeno" (click)="setTip(TipOglasa.Nadjeno)">
+      <button type="button" class="seg-opt" [class.active]="type() === ListingType.Found" (click)="setType(ListingType.Found)">
         Nađeno
       </button>
     </div>
 
     <div class="chip-row">
-      @for (k of KATEGORIJE; track k) {
-        <button type="button" class="chip" [class.active]="kategorija() === k" (click)="toggleKategorija(k)">
-          {{ KATEGORIJA_LABELS[k] }}
+      @for (k of CATEGORIES; track k) {
+        <button type="button" class="chip" [class.active]="category() === k" (click)="toggleCategory(k)">
+          {{ CATEGORY_LABELS[k] }}
         </button>
       }
     </div>
@@ -61,8 +61,8 @@
     </div>
   } @else {
     <div class="oglas-list">
-      @for (oglas of filtered(); track oglas.oglasId) {
-        <app-oglas-card [oglas]="oglas" />
+      @for (listing of filtered(); track listing.listingId) {
+        <app-listing-card [listing]="listing" />
       }
     </div>
   }

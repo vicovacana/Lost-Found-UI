@@ -18,7 +18,7 @@
     <form (ngSubmit)="submitLogin()">
       <div class="field">
         <label for="login-username">Korisničko ime</label>
-        <input id="login-username" class="input" name="loginKorisnickoIme" [(ngModel)]="loginKorisnickoIme" required />
+        <input id="login-username" class="input" name="loginUsername" [(ngModel)]="loginUsername" required />
       </div>
       <div class="field">
         <label for="login-password">Lozinka</label>
@@ -27,8 +27,8 @@
             id="login-password"
             class="input"
             [type]="loginPasswordVisible() ? 'text' : 'password'"
-            name="loginLozinka"
-            [(ngModel)]="loginLozinka"
+            name="loginPassword"
+            [(ngModel)]="loginPassword"
             required
           />
           <button
@@ -62,7 +62,7 @@
     <form (ngSubmit)="submitSignup()">
       <div class="field">
         <label for="signup-username">Korisničko ime</label>
-        <input id="signup-username" class="input" name="signupKorisnickoIme" [(ngModel)]="signupKorisnickoIme" required />
+        <input id="signup-username" class="input" name="signupUsername" [(ngModel)]="signupUsername" required />
       </div>
       <div class="field">
         <label for="signup-email">Email</label>
@@ -75,8 +75,8 @@
             id="signup-password"
             class="input"
             [type]="signupPasswordVisible() ? 'text' : 'password'"
-            name="signupLozinka"
-            [(ngModel)]="signupLozinka"
+            name="signupPassword"
+            [(ngModel)]="signupPassword"
             required
             minlength="6"
           />

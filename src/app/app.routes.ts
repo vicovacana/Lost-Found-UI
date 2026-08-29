@@ -13,19 +13,19 @@ export const routes: Routes = [
   {
     path: 'oglasi/novi',
     loadComponent: () =>
-      import('./features/oglas-form/oglas-form-page').then((m) => m.OglasFormPage),
+      import('./features/listing-form/listing-form-page').then((m) => m.ListingFormPage),
     canActivate: [authGuard],
-    data: { standardniKorisnikOnly: true },
+    data: { standardUserOnly: true },
   },
   {
     path: 'oglasi/:id',
     loadComponent: () =>
-      import('./features/oglas-detail/oglas-detail-page').then((m) => m.OglasDetailPage),
+      import('./features/listing-detail/listing-detail-page').then((m) => m.ListingDetailPage),
   },
   {
     path: 'oglasi/:id/izmena',
     loadComponent: () =>
-      import('./features/oglas-form/oglas-form-page').then((m) => m.OglasFormPage),
+      import('./features/listing-form/listing-form-page').then((m) => m.ListingFormPage),
     canActivate: [authGuard],
   },
   {
@@ -36,14 +36,16 @@ export const routes: Routes = [
   {
     path: 'razgovori',
     loadComponent: () =>
-      import('./features/razgovori/razgovori-list-page').then((m) => m.RazgovoriListPage),
+      import('./features/conversations/conversations-list-page').then(
+        (m) => m.ConversationsListPage,
+      ),
     canActivate: [authGuard],
   },
   {
     path: 'razgovori/:id',
     loadComponent: () =>
-      import('./features/razgovor-detail/razgovor-detail-page').then(
-        (m) => m.RazgovorDetailPage,
+      import('./features/conversation-detail/conversation-detail-page').then(
+        (m) => m.ConversationDetailPage,
       ),
     canActivate: [authGuard],
   },

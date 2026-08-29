@@ -2,10 +2,10 @@
   <div class="page">
     <p class="text-muted">Učitavanje…</p>
   </div>
-} @else if (oglas(); as o) {
+} @else if (listing(); as o) {
   <div class="detail-photo">
-    @if (o.fotografija) {
-      <img [src]="o.fotografija" [alt]="o.naziv" />
+    @if (o.photo) {
+      <img [src]="o.photo" [alt]="o.title" />
     } @else {
       <span class="photo-placeholder"></span>
     }
@@ -15,32 +15,32 @@
       </svg>
     </a>
     @if (isOwner) {
-      <a class="btn btn-secondary edit-btn" [routerLink]="['/oglasi', o.oglasId, 'izmena']">Izmeni</a>
+      <a class="btn btn-secondary edit-btn" [routerLink]="['/oglasi', o.listingId, 'izmena']">Izmeni</a>
     }
   </div>
 
   <div class="page detail-body">
     <div class="meta-row">
-      <span class="tag" [class.tag-found]="o.tip === TipOglasa.Nadjeno" [class.tag-lost]="o.tip === TipOglasa.Izgubljeno">
-        {{ o.tip === TipOglasa.Nadjeno ? 'Nađeno' : 'Izgubljeno' }}
+      <span class="tag" [class.tag-found]="o.type === ListingType.Found" [class.tag-lost]="o.type === ListingType.Lost">
+        {{ o.type === ListingType.Found ? 'Nađeno' : 'Izgubljeno' }}
       </span>
-      <span class="text-muted" style="font-size: 12px">{{ o.datumKreiranja | date: 'd. MMM yyyy · HH:mm' }}</span>
+      <span class="text-muted" style="font-size: 12px">{{ o.createdAt | date: 'd. MMM yyyy · HH:mm' }}</span>
     </div>
 
-    <h1>{{ o.naziv }}</h1>
+    <h1>{{ o.title }}</h1>
 
     <div class="submeta-row">
       <div>
         <span class="label">Kategorija</span>
-        <span>{{ KATEGORIJA_LABELS[o.kategorija] }}</span>
+        <span>{{ CATEGORY_LABELS[o.category] }}</span>
       </div>
       <div>
         <span class="label">Grad</span>
-        <span>{{ o.grad }}</span>
+        <span>{{ o.city }}</span>
       </div>
     </div>
 
-    <p>{{ o.opis }}</p>
+    <p>{{ o.description }}</p>
 
     @if (o.latitude !== null && o.longitude !== null) {
       <div class="field">
@@ -52,15 +52,15 @@
     }
 
     <div class="creator-row hr-top">
-      <span class="avatar">{{ o.kreatorKorisnickoIme.slice(0, 2).toUpperCase() }}</span>
-      <span class="creator-name">{{ o.kreatorKorisnickoIme }}</span>
+      <span class="avatar">{{ o.creatorUsername.slice(0, 2).toUpperCase() }}</span>
+      <span class="creator-name">{{ o.creatorUsername }}</span>
     </div>
   </div>
 
   <div class="page action-bar">
     @if (!auth.isAuthenticated()) {
       <a class="btn btn-primary btn-block" routerLink="/auth">
-        {{ o.tip === TipOglasa.Nadjeno ? 'Prijavi se da bi tvrdio da je tvoje' : 'Prijavi se da bi tvrdio da si našao' }}
+        {{ o.type === ListingType.Found ? 'Prijavi se da bi tvrdio da je tvoje' : 'Prijavi se da bi tvrdio da si našao' }}
       </a>
     } @else if (auth.isAdmin()) {
     } @else if (isOwner) {
@@ -68,22 +68,22 @@
     } @else if (myClaim(); as claim) {
       <div class="claim-status">
         <span>Tvoj zahtev:</span>
-        <app-status-tag [potrazivanje]="claim.status" />
+        <app-status-tag [claim]="claim.status" />
       </div>
-      @if (razgovor(); as r) {
-        <a class="btn btn-secondary btn-block" [routerLink]="['/razgovori', r.razgovorId]">Otvori chat</a>
+      @if (conversation(); as c) {
+        <a class="btn btn-secondary btn-block" [routerLink]="['/razgovori', c.conversationId]">Otvori chat</a>
       }
     } @else {
       <button type="button" class="btn btn-primary btn-block" [disabled]="claiming()" (click)="claim()">
-        {{ o.tip === TipOglasa.Nadjeno ? 'Ovo je moje' : 'Našao sam' }}
+        {{ o.type === ListingType.Found ? 'Ovo je moje' : 'Našao sam' }}
       </button>
     }
 
     @if (auth.isAdmin()) {
-      @if (razgovor(); as r) {
-        <a class="btn btn-secondary btn-block" [routerLink]="['/razgovori', r.razgovorId]">Otvori chat</a>
-      } @else if (potrazivanja().length > 0) {
-        <button type="button" class="btn btn-secondary btn-block" [disabled]="openingRazgovor()" (click)="startRazgovor()">
+      @if (conversation(); as c) {
+        <a class="btn btn-secondary btn-block" [routerLink]="['/razgovori', c.conversationId]">Otvori chat</a>
+      } @else if (claims().length > 0) {
+        <button type="button" class="btn btn-secondary btn-block" [disabled]="openingConversation()" (click)="startConversation()">
           Pokreni istragu
         </button>
       } @else {

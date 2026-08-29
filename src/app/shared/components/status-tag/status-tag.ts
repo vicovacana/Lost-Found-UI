@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
 import {
-  STATUS_POTRAZIVANJA_LABELS,
-  STATUS_RAZGOVORA_LABELS,
-  StatusPotrazivanja,
-  StatusRazgovora,
+  CLAIM_STATUS_LABELS,
+  CONVERSATION_STATUS_LABELS,
+  ClaimStatus,
+  ConversationStatus,
 } from '../../../core/models/enums';
 
 @Component({
@@ -11,19 +11,19 @@ import {
   template: `<span class="tag" [class]="cssClass">{{ label }}</span>`,
 })
 export class StatusTag {
-  @Input() set potrazivanje(status: StatusPotrazivanja) {
-    this.label = STATUS_POTRAZIVANJA_LABELS[status];
+  @Input() set claim(status: ClaimStatus) {
+    this.label = CLAIM_STATUS_LABELS[status];
     this.cssClass =
-      status === StatusPotrazivanja.Prihvaceno
+      status === ClaimStatus.Accepted
         ? 'tag-accepted'
-        : status === StatusPotrazivanja.Odbijeno
+        : status === ClaimStatus.Rejected
           ? 'tag-rejected'
           : 'tag-pending';
   }
 
-  @Input() set razgovor(status: StatusRazgovora) {
-    this.label = STATUS_RAZGOVORA_LABELS[status];
-    this.cssClass = status === StatusRazgovora.Otvoren ? 'tag-open' : 'tag-closed';
+  @Input() set conversation(status: ConversationStatus) {
+    this.label = CONVERSATION_STATUS_LABELS[status];
+    this.cssClass = status === ConversationStatus.Open ? 'tag-open' : 'tag-closed';
   }
 
   protected label = '';

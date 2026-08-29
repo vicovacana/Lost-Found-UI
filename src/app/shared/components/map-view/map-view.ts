@@ -22,7 +22,7 @@ L.Marker.prototype.options.icon = L.icon({
   shadowSize: [41, 41],
 });
 
-const BEOGRAD: [number, number] = [44.8154, 20.4602];
+const BELGRADE: [number, number] = [44.8154, 20.4602];
 
 @Component({
   selector: 'app-map-view',
@@ -43,7 +43,7 @@ export class MapView implements AfterViewInit, OnChanges, OnDestroy {
 
   ngAfterViewInit(): void {
     const start: [number, number] =
-      this.lat !== null && this.lng !== null ? [this.lat, this.lng] : BEOGRAD;
+      this.lat !== null && this.lng !== null ? [this.lat, this.lng] : BELGRADE;
 
     this.map = L.map(this.mapEl.nativeElement).setView(start, this.zoom);
 

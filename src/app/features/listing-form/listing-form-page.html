@@ -4,14 +4,14 @@
   @if (loading()) {
     <p class="text-muted">Učitavanje…</p>
   } @else {
-    <form #oglasForm="ngForm" (ngSubmit)="submit()">
+    <form #listingForm="ngForm" (ngSubmit)="submit()">
       <div class="field">
         <label>Tip</label>
         <div class="seg">
-          <button type="button" class="seg-opt" [class.active]="form.tip === TipOglasa.Izgubljeno" (click)="setTip(TipOglasa.Izgubljeno)">
+          <button type="button" class="seg-opt" [class.active]="form.type === ListingType.Lost" (click)="setType(ListingType.Lost)">
             Izgubio sam
           </button>
-          <button type="button" class="seg-opt" [class.active]="form.tip === TipOglasa.Nadjeno" (click)="setTip(TipOglasa.Nadjeno)">
+          <button type="button" class="seg-opt" [class.active]="form.type === ListingType.Found" (click)="setType(ListingType.Found)">
             Našao sam
           </button>
         </div>
@@ -19,23 +19,23 @@
 
       <div class="field">
         <label for="naziv">Naziv predmeta</label>
-        <input id="naziv" class="input" name="naziv" [(ngModel)]="form.naziv" required maxlength="150" />
+        <input id="naziv" class="input" name="naziv" [(ngModel)]="form.title" required maxlength="150" />
       </div>
 
       <div class="two-col">
         <div class="field">
           <label for="kategorija">Kategorija</label>
-          <select id="kategorija" class="input" name="kategorija" [(ngModel)]="form.kategorija">
-            @for (k of KATEGORIJE; track k) {
-              <option [ngValue]="k">{{ KATEGORIJA_LABELS[k] }}</option>
+          <select id="kategorija" class="input" name="kategorija" [(ngModel)]="form.category">
+            @for (k of CATEGORIES; track k) {
+              <option [ngValue]="k">{{ CATEGORY_LABELS[k] }}</option>
             }
           </select>
         </div>
         <div class="field">
           <label for="grad">Grad</label>
-          <select id="grad" class="input" name="grad" [(ngModel)]="form.grad" required>
+          <select id="grad" class="input" name="grad" [(ngModel)]="form.city" required>
             <option value="" disabled>Izaberi grad</option>
-            @for (g of GRADOVI_SRBIJE; track g) {
+            @for (g of SERBIAN_CITIES; track g) {
               <option [value]="g">{{ g }}</option>
             }
           </select>
@@ -44,7 +44,7 @@
 
       <div class="field">
         <label for="opis">Opis</label>
-        <textarea id="opis" class="input" name="opis" [(ngModel)]="form.opis" required maxlength="2000" rows="4"></textarea>
+        <textarea id="opis" class="input" name="opis" [(ngModel)]="form.description" required maxlength="2000" rows="4"></textarea>
       </div>
 
       <div class="field">
@@ -52,7 +52,7 @@
         <div class="file-input-row">
           <button type="button" class="btn btn-secondary" (click)="fotoInput.click()">Odaberi fajl</button>
           <span class="file-input-name text-muted">
-            {{ selectedFileName() || (form.fotografija ? 'Trenutna fotografija' : 'Nije odabrano') }}
+            {{ selectedFileName() || (form.photo ? 'Trenutna fotografija' : 'Nije odabrano') }}
           </span>
           <input
             #fotoInput
@@ -60,25 +60,25 @@
             class="file-input-native"
             type="file"
             accept="image/jpeg,image/png,image/webp,image/gif"
-            (change)="onFotografijaSelected($event)"
+            (change)="onPhotoSelected($event)"
           />
         </div>
-        @if (previewUrl() || form.fotografija) {
+        @if (previewUrl() || form.photo) {
           <div class="foto-preview-wrap">
-            <img class="foto-preview" [src]="previewUrl() || form.fotografija" alt="Pregled fotografije" />
-            <button type="button" class="btn btn-ghost" (click)="removeFotografija()">Ukloni fotografiju</button>
+            <img class="foto-preview" [src]="previewUrl() || form.photo" alt="Pregled fotografije" />
+            <button type="button" class="btn btn-ghost" (click)="removePhoto()">Ukloni fotografiju</button>
           </div>
         }
       </div>
 
-      @if (form.tip === TipOglasa.Nadjeno) {
+      @if (form.type === ListingType.Found) {
         <div class="field">
           <label for="opis-lokacije">Opis lokacije (opciono)</label>
           <textarea
             id="opis-lokacije"
             class="input"
             name="opisLokacije"
-            [(ngModel)]="form.opisLokacije"
+            [(ngModel)]="form.locationDescription"
             maxlength="1000"
             rows="3"
             placeholder="Gde tačno je predmet nađen? Ovaj opis se ne prikazuje javno — vidljiv je tek u razgovoru, nakon što potvrdiš čije je potraživanje."
@@ -92,21 +92,21 @@
             <input
               type="checkbox"
               name="dodajLokaciju"
-              [ngModel]="dodajLokaciju()"
-              (ngModelChange)="onToggleLokacija($event)"
+              [ngModel]="addLocation()"
+              (ngModelChange)="onToggleLocation($event)"
             />
             <span class="toggle-track"><span class="toggle-thumb"></span></span>
           </span>
           Dodaj lokaciju
         </label>
-        @if (dodajLokaciju()) {
+        @if (addLocation()) {
           <div class="map-slot">
             <app-map-view mode="pick" [lat]="form.latitude" [lng]="form.longitude" (pinChange)="onPinChange($event)" />
           </div>
         }
       </div>
 
-      <button type="submit" class="btn btn-primary btn-block" [disabled]="submitting() || oglasForm.invalid">
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="submitting() || listingForm.invalid">
         {{ isEdit ? 'Sačuvaj izmene' : 'Objavi oglas' }}
       </button>
     </form>
