@@ -48,9 +48,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
-    path: 'tajna-admin-registracija',
+    path: 'admin-registration',
     loadComponent: () =>
-      import('./features/admin-tajna/admin-tajna-page').then((m) => m.AdminTajnaPage),
+      import('./features/admin-registration/admin-registration-page').then(
+        (m) => m.AdminRegistrationPage,
+      ),
   },
   {
     path: '**',

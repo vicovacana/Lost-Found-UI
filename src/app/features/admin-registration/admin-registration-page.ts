@@ -5,12 +5,12 @@ import { finalize } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
-  selector: 'app-admin-tajna-page',
+  selector: 'app-admin-registration-page',
   imports: [FormsModule],
-  templateUrl: './admin-tajna-page.html',
-  styleUrl: './admin-tajna-page.scss',
+  templateUrl: './admin-registration-page.html',
+  styleUrl: './admin-registration-page.scss',
 })
-export class AdminTajnaPage {
+export class AdminRegistrationPage {
   protected submitting = signal(false);
 
   protected korisnickoIme = '';

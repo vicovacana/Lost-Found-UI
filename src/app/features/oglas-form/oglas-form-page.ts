@@ -26,6 +26,7 @@ export class OglasFormPage implements OnInit, OnDestroy {
   protected loading = signal(false);
   protected previewUrl = signal<string | null>(null);
   protected selectedFileName = signal<string | null>(null);
+  protected dodajLokaciju = signal(false);
 
   private selectedFile: File | null = null;
 
@@ -69,6 +70,7 @@ export class OglasFormPage implements OnInit, OnDestroy {
             fotografija: o.fotografija,
             opisLokacije: o.opisLokacije,
           };
+          this.dodajLokaciju.set(o.latitude !== null && o.longitude !== null);
           this.loading.set(false);
         },
         error: () => this.loading.set(false),
@@ -118,6 +120,14 @@ export class OglasFormPage implements OnInit, OnDestroy {
     this.form.longitude = pin.lng;
   }
 
+  onToggleLokacija(ukljuceno: boolean): void {
+    this.dodajLokaciju.set(ukljuceno);
+    if (!ukljuceno) {
+      this.form.latitude = null;
+      this.form.longitude = null;
+    }
+  }
+
   submit(): void {
     if (!this.form.naziv || !this.form.opis || !this.form.grad) return;
 
@@ -134,7 +144,12 @@ export class OglasFormPage implements OnInit, OnDestroy {
   }
 
   private createOrUpdate(fotografija: string | null): void {
-    const dto: OglasCreate = { ...this.form, fotografija };
+    const dto: OglasCreate = {
+      ...this.form,
+      fotografija,
+      latitude: this.dodajLokaciju() ? this.form.latitude : null,
+      longitude: this.dodajLokaciju() ? this.form.longitude : null,
+    };
     const request$ =
       this.isEdit && this.oglasId
         ? this.oglasService.update(this.oglasId, dto)
