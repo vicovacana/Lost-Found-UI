@@ -15,6 +15,7 @@ export interface Listing {
   creatorId: number;
   creatorUsername: string;
   adminId: number | null;
+  adminUsername: string | null;
 }
 
 export interface ListingCreate {

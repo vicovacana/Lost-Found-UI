@@ -60,6 +60,17 @@ export class ListingDetailPage implements OnInit {
     return !!user && !!listing && user.userId === listing.creatorId;
   }
 
+  get isAssignedAdmin(): boolean {
+    const user = this.auth.currentUser();
+    const listing = this.listing();
+    return !!user && !!listing && listing.adminId === user.userId;
+  }
+
+  get isAssignedToOtherAdmin(): boolean {
+    const listing = this.listing();
+    return !!listing && listing.adminId !== null && !this.isAssignedAdmin;
+  }
+
   claim(): void {
     this.claiming.set(true);
     this.claimService.create(this.listingId).subscribe({

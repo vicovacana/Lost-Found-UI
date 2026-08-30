@@ -55,6 +55,35 @@
       <span class="avatar">{{ o.creatorUsername.slice(0, 2).toUpperCase() }}</span>
       <span class="creator-name">{{ o.creatorUsername }}</span>
     </div>
+
+    @if (auth.isAdmin()) {
+      <div class="assigned-admin hr-top">
+        <span class="label">Dodeljeni admin</span>
+        @if (o.adminUsername) {
+          <span>{{ o.adminUsername }}</span>
+        } @else {
+          <span class="text-muted">Nije dodeljen</span>
+        }
+      </div>
+    }
+
+    @if (auth.isAdmin() && claims().length > 0) {
+      <div class="claimants hr-top">
+        <span class="label">Potraživanja ({{ claims().length }})</span>
+        <ul class="claimant-list">
+          @for (c of claims(); track c.userId) {
+            <li class="claimant-row">
+              <span class="avatar avatar-sm">{{ c.username.slice(0, 2).toUpperCase() }}</span>
+              <div class="claimant-info">
+                <span class="creator-name">{{ c.username }}</span>
+                <span class="text-muted claimant-date">{{ c.createdAt | date: 'd. MMM yyyy · HH:mm' }}</span>
+              </div>
+              <app-status-tag [claim]="c.status" />
+            </li>
+          }
+        </ul>
+      </div>
+    }
   </div>
 
   <div class="page action-bar">
@@ -80,7 +109,9 @@
     }
 
     @if (auth.isAdmin()) {
-      @if (conversation(); as c) {
+      @if (isAssignedToOtherAdmin) {
+        <p class="text-muted">Oglas je dodeljen administratoru {{ o.adminUsername }}.</p>
+      } @else if (conversation(); as c) {
         <a class="btn btn-secondary btn-block" [routerLink]="['/razgovori', c.conversationId]">Otvori chat</a>
       } @else if (claims().length > 0) {
         <button type="button" class="btn btn-secondary btn-block" [disabled]="openingConversation()" (click)="startConversation()">
