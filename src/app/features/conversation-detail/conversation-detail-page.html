@@ -20,7 +20,7 @@
       <span class="pending-title">Potraživanja na čekanju</span>
       @for (p of pending(); track p.userId) {
         <div class="pending-row">
-          <span>{{ p.username }}</span>
+          <a [routerLink]="['/korisnici', p.userId]">{{ p.username }}</a>
           <button type="button" class="btn btn-secondary" (click)="decideClaim(p, ClaimStatus.Accepted)">Prihvati</button>
         </div>
       }
@@ -31,7 +31,10 @@
   <div class="chat-body">
     @for (message of messages(); track message.messageId) {
       <div class="message" [class.mine]="message.userId === currentUserId">
-        <span class="message-meta">{{ message.username }} · {{ message.createdAt | date: 'HH:mm' }}</span>
+        <span class="message-meta">
+          <a [routerLink]="['/korisnici', message.userId]">{{ message.username }}</a>
+          · {{ message.createdAt | date: 'HH:mm' }}
+        </span>
         <span class="message-bubble">{{ message.content }}</span>
       </div>
     }

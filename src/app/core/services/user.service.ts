@@ -13,6 +13,10 @@ export class UserService {
     return this.http.get<User>(`${this.base}/me`);
   }
 
+  getById(id: number) {
+    return this.http.get<User>(`${this.base}/${id}`);
+  }
+
   updateMe(dto: UserUpdate) {
     return this.http.put<User>(`${this.base}/me`, dto);
   }

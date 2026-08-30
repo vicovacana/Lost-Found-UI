@@ -41,12 +41,4 @@ export class ListingService {
   delete(id: number) {
     return this.http.delete<void>(`${this.base}/${id}`);
   }
-
-  assignAdmin(id: number, adminId?: number) {
-    return this.http.patch<Listing>(`${this.base}/${id}/admin`, { adminId: adminId ?? null });
-  }
-
-  clearAdmin(id: number) {
-    return this.http.delete<Listing>(`${this.base}/${id}/admin`);
-  }
 }

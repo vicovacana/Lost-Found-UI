@@ -44,10 +44,20 @@
           </div>
         } @else {
           @for (p of myClaims(); track p.listingId) {
-            <a class="list-item card" [routerLink]="['/oglasi', p.listingId]">
-              <span class="li-title">Oglas #{{ p.listingId }}</span>
+            <div class="list-item card">
+              <a class="li-title" [routerLink]="['/oglasi', p.listingId]">Oglas #{{ p.listingId }}</a>
               <app-status-tag [claim]="p.status" />
-            </a>
+              @if (p.status === ClaimStatus.Pending) {
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  [disabled]="withdrawingId() === p.listingId"
+                  (click)="withdrawClaim(p.listingId)"
+                >
+                  Povuci
+                </button>
+              }
+            </div>
           }
         }
       }

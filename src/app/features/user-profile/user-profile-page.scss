@@ -1,3 +1,13 @@
+.user-profile-page {
+  padding-top: var(--space-6);
+}
+
+.back-btn {
+  position: absolute;
+  top: 14px;
+  left: 18px;
+}
+
 .profile-header {
   display: flex;
   align-items: center;
@@ -32,6 +42,16 @@
   font-size: 20px;
 }
 
+.label {
+  display: block;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--color-neutral-600);
+  margin-bottom: var(--space-2);
+}
+
 .tab-content {
   margin-top: var(--space-4);
   display: flex;
@@ -44,19 +64,14 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
-
-  .btn {
-    padding: 6px 10px;
-    font-size: 12px;
-  }
+  text-decoration: none;
+  color: inherit;
 }
 
 .li-title {
   font-family: var(--font-heading);
   font-weight: 500;
   font-size: 14px;
-  text-decoration: none;
-  color: inherit;
 }
 
 .li-meta {

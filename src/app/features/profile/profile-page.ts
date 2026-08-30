@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CATEGORY_LABELS, ListingType } from '../../core/models/enums';
+import { CATEGORY_LABELS, ClaimStatus, ListingType } from '../../core/models/enums';
 import { User } from '../../core/models/user.model';
 import { Listing } from '../../core/models/listing.model';
 import { Claim } from '../../core/models/claim.model';
@@ -21,12 +21,14 @@ type Tab = 'oglasi' | 'potrazivanja';
 export class ProfilePage {
   protected readonly ListingType = ListingType;
   protected readonly CATEGORY_LABELS = CATEGORY_LABELS;
+  protected readonly ClaimStatus = ClaimStatus;
 
   protected me = signal<User | null>(null);
   protected myListings = signal<Listing[]>([]);
   protected myClaims = signal<Claim[]>([]);
   protected tab = signal<Tab>('oglasi');
   protected loading = signal(true);
+  protected withdrawingId = signal<number | null>(null);
 
   constructor(
     protected readonly auth: AuthService,
@@ -52,5 +54,18 @@ export class ProfilePage {
 
   setTab(tab: Tab): void {
     this.tab.set(tab);
+  }
+
+  withdrawClaim(listingId: number): void {
+    const user = this.auth.currentUser();
+    if (!user) return;
+    this.withdrawingId.set(listingId);
+    this.claimService.withdraw(listingId, user.userId).subscribe({
+      next: () => {
+        this.withdrawingId.set(null);
+        this.myClaims.update((list) => list.filter((c) => c.listingId !== listingId));
+      },
+      error: () => this.withdrawingId.set(null),
+    });
   }
 }

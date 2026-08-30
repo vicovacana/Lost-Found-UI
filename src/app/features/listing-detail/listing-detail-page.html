@@ -51,10 +51,10 @@
       </div>
     }
 
-    <div class="creator-row hr-top">
+    <a class="creator-row hr-top" [routerLink]="['/korisnici', o.creatorId]">
       <span class="avatar">{{ o.creatorUsername.slice(0, 2).toUpperCase() }}</span>
       <span class="creator-name">{{ o.creatorUsername }}</span>
-    </div>
+    </a>
 
     @if (auth.isAdmin()) {
       <div class="assigned-admin hr-top">
@@ -73,11 +73,13 @@
         <ul class="claimant-list">
           @for (c of claims(); track c.userId) {
             <li class="claimant-row">
-              <span class="avatar avatar-sm">{{ c.username.slice(0, 2).toUpperCase() }}</span>
-              <div class="claimant-info">
-                <span class="creator-name">{{ c.username }}</span>
-                <span class="text-muted claimant-date">{{ c.createdAt | date: 'd. MMM yyyy · HH:mm' }}</span>
-              </div>
+              <a class="claimant-link" [routerLink]="['/korisnici', c.userId]">
+                <span class="avatar avatar-sm">{{ c.username.slice(0, 2).toUpperCase() }}</span>
+                <div class="claimant-info">
+                  <span class="creator-name">{{ c.username }}</span>
+                  <span class="text-muted claimant-date">{{ c.createdAt | date: 'd. MMM yyyy · HH:mm' }}</span>
+                </div>
+              </a>
               <app-status-tag [claim]="c.status" />
             </li>
           }
@@ -94,6 +96,7 @@
     } @else if (auth.isAdmin()) {
     } @else if (isOwner) {
       <a class="btn btn-secondary btn-block" routerLink="/razgovori">Vidi moje razgovore</a>
+      <button type="button" class="btn btn-danger btn-block" (click)="askDelete()">Obriši oglas</button>
     } @else if (myClaim(); as claim) {
       <div class="claim-status">
         <span>Tvoj zahtev:</span>
@@ -101,6 +104,11 @@
       </div>
       @if (conversation(); as c) {
         <a class="btn btn-secondary btn-block" [routerLink]="['/razgovori', c.conversationId]">Otvori chat</a>
+      }
+      @if (claim.status === ClaimStatus.Pending) {
+        <button type="button" class="btn btn-danger btn-block" [disabled]="withdrawing()" (click)="withdrawClaim()">
+          Povuci potraživanje
+        </button>
       }
     } @else {
       <button type="button" class="btn btn-primary btn-block" [disabled]="claiming()" (click)="claim()">
@@ -125,5 +133,18 @@
 } @else {
   <div class="page">
     <p class="text-muted">Oglas nije pronađen.</p>
+  </div>
+}
+
+@if (confirmingDelete()) {
+  <div class="modal-overlay" (click)="cancelDelete()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h3>Brisanje oglasa</h3>
+      <p class="text-muted">Da li si siguran da želiš da obrišeš ovaj oglas?</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" (click)="cancelDelete()">Otkaži</button>
+        <button type="button" class="btn btn-danger" [disabled]="deleting()" (click)="confirmDelete()">Obriši</button>
+      </div>
+    </div>
   </div>
 }

@@ -34,6 +34,12 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'korisnici/:id',
+    loadComponent: () =>
+      import('./features/user-profile/user-profile-page').then((m) => m.UserProfilePage),
+    canActivate: [authGuard],
+  },
+  {
     path: 'razgovori',
     loadComponent: () =>
       import('./features/conversations/conversations-list-page').then(

@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Subscription, finalize, forkJoin, interval } from 'rxjs';
 import { ClaimStatus, ConversationStatus } from '../../core/models/enums';
 import { Message } from '../../core/models/message.model';
@@ -19,7 +19,7 @@ const POLL_INTERVAL_MS = 5_000;
 
 @Component({
   selector: 'app-conversation-detail-page',
-  imports: [FormsModule, StatusTag, DatePipe],
+  imports: [FormsModule, RouterLink, StatusTag, DatePipe],
   templateUrl: './conversation-detail-page.html',
   styleUrl: './conversation-detail-page.scss',
 })

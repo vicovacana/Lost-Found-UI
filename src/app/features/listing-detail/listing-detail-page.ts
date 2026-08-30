@@ -32,6 +32,9 @@ export class ListingDetailPage implements OnInit {
   protected claims = signal<Claim[]>([]);
   protected claiming = signal(false);
   protected openingConversation = signal(false);
+  protected confirmingDelete = signal(false);
+  protected deleting = signal(false);
+  protected withdrawing = signal(false);
 
   protected readonly auth: AuthService;
 
@@ -81,6 +84,45 @@ export class ListingDetailPage implements OnInit {
         this.loadConversation();
       },
       error: () => this.claiming.set(false),
+    });
+  }
+
+  askDelete(): void {
+    this.confirmingDelete.set(true);
+  }
+
+  cancelDelete(): void {
+    this.confirmingDelete.set(false);
+  }
+
+  confirmDelete(): void {
+    this.deleting.set(true);
+    this.listingService.delete(this.listingId).subscribe({
+      next: () => {
+        this.deleting.set(false);
+        this.confirmingDelete.set(false);
+        this.toast.success('Oglas je obrisan.');
+        this.router.navigateByUrl('/');
+      },
+      error: () => {
+        this.deleting.set(false);
+        this.confirmingDelete.set(false);
+      },
+    });
+  }
+
+  withdrawClaim(): void {
+    const user = this.auth.currentUser();
+    if (!user) return;
+    this.withdrawing.set(true);
+    this.claimService.withdraw(this.listingId, user.userId).subscribe({
+      next: () => {
+        this.withdrawing.set(false);
+        this.myClaim.set(null);
+        this.conversation.set(null);
+        this.toast.success('Potraživanje je povučeno.');
+      },
+      error: () => this.withdrawing.set(false),
     });
   }
 
